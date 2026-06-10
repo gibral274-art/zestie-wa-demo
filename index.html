@@ -122,7 +122,8 @@
 
     <script>
         // Ini otak sementara buat nangkep inputan di Web
-        function sendMessage() {
+    
+        async function sendMessage() {
             const input = document.getElementById('userInput');
             const chatBox = document.getElementById('chatBox');
             const text = input.value.trim();
@@ -134,24 +135,32 @@
             userMsg.innerText = text;
             chatBox.appendChild(userMsg);
 
-            // Bersihin kotak ketikan
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // NANTI KITA SAMBUNGIN KE BACKEND NODE.JS DISINI
-            // Buat sekarang, kasih balasan bohongan (dummy) dulu
-            setTimeout(() => {
-                const botMsg = document.createElement('div');
-                botMsg.className = 'message bot-msg';
-                botMsg.innerText = "sistem backend lagi dikalibrasi. sabar ya.";
-                chatBox.appendChild(botMsg);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1000);
+            // Animasi ngetik biar keliatan mikir
+            const botMsg = document.createElement('div');
+            botMsg.className = 'message bot-msg';
+            botMsg.innerText = "lagi ngetik...";
+            chatBox.appendChild(botMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                // Jembatan buat manggil otak di folder api
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                
+                const data = await response.json();
+                botMsg.innerText = data.reply; // Ganti tulisan "lagi ngetik..." jadi jawaban asli AI
+            } catch (error) {
+                botMsg.innerText = "koneksi terputus nih, coba chat lagi";
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function handleEnter(e) {
             if(e.key === 'Enter') sendMessage();
         }
-    </script>
-</body>
-</html>
