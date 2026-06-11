@@ -6,54 +6,75 @@
     <title>Zestie AI | Enterprise Demo</title>
     <style>
         body { 
-            background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #0f1115; color: #e1e7ef; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; 
         }
         .chat-container { 
-            width: 100%; max-width: 400px; background: #161b22; border-radius: 12px; border: 1px solid #30363d; 
-            overflow: hidden; display: flex; flex-direction: column; height: 85vh; box-shadow: 0 8px 32px rgba(0,0,0,0.8); 
+            width: 100%; max-width: 400px; background: #161b22; border-radius: 16px; border: 1px solid #2d333b; 
+            overflow: hidden; display: flex; flex-direction: column; height: 85vh; box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
         }
         .header { 
-            padding: 18px; background: #21262d; border-bottom: 1px solid #30363d; text-align: center; font-weight: 600; letter-spacing: 0.5px;
+            padding: 18px; background: #1c2128; border-bottom: 1px solid #2d333b; text-align: center; font-weight: 700; font-size: 18px; letter-spacing: 0.5px;
         }
-        .header span { color: #2ea043; }
+        /* Warna disesuaikan dengan logo Zestie */
+        .header .zestie-green { color: #2ea043; }
+        .header .zestie-gold { color: #F5A623; }
+        
         .chat-box { 
             flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth;
         }
         .message { 
-            padding: 12px 16px; border-radius: 10px; max-width: 85%; line-height: 1.5; font-size: 15px; word-wrap: break-word;
+            padding: 12px 16px; border-radius: 12px; max-width: 85%; line-height: 1.5; font-size: 15px; word-wrap: break-word;
         }
         .bot-msg { 
-            background: #21262d; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #30363d;
+            background: #22272e; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #2d333b;
         }
         .user-msg { 
-            background: #2ea043; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 2px; 
+            background: #2ea043; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500;
         }
         .input-area { 
-            display: flex; padding: 14px; border-top: 1px solid #30363d; background: #161b22; 
+            display: flex; padding: 14px; border-top: 1px solid #2d333b; background: #161b22; gap: 10px;
         }
         input { 
-            flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: #ffffff; outline: none; font-size: 14px;
+            flex: 1; padding: 12px 16px; border-radius: 20px; border: 1px solid #2d333b; background: #0f1115; color: #ffffff; outline: none; font-size: 14px;
         }
         input:focus { border-color: #2ea043; }
         button { 
-            background: #2ea043; color: white; border: none; padding: 0 20px; margin-left: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
+            background: #2ea043; color: white; border: none; padding: 0 20px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.2s;
         }
         button:hover { background: #238636; }
+        
+        /* Animasi 3 Titik Ngetik */
+        .typing-indicator {
+            display: flex; gap: 4px; padding: 4px 8px; align-items: center; height: 14px;
+        }
+        .typing-indicator span {
+            width: 6px; height: 6px; background-color: #8b949e; border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
         .chat-box::-webkit-scrollbar { width: 6px; }
-        .chat-box::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+        .chat-box::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 3px; }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="header"><span>●</span> Zestie AI Demo</div>
+        <div class="header"><span class="zestie-green">Zestie</span> <span class="zestie-gold">AI</span> Demo</div>
         
         <div class="chat-box" id="chatBox">
             <div class="message bot-msg">
-                halo, zestie ai dimari.
+                halo, zestie ai dimari 🍃
+                <br><br>
+                biar bot ai pintar kami yang balas chat klienmu. lebih cepat & lebih murah dari UMR!
                 <br><br>
                 mau ngetes kepintaran otak kita buat industri apa hari ini?
-                <br><br>
+                <br>
                 1. kargo & logistik<br>
                 2. klinik kecantikan<br>
                 3. brand f&b / retail
@@ -73,7 +94,6 @@
             const text = input.value.trim();
             if(!text) return;
 
-            // Nampilin pesan User
             const userMsg = document.createElement('div');
             userMsg.className = 'message user-msg';
             userMsg.innerText = text;
@@ -82,15 +102,14 @@
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Animasi AI lagi mikir
             const botMsg = document.createElement('div');
             botMsg.className = 'message bot-msg';
-            botMsg.innerText = "lagi ngetik...";
+            // Menampilkan animasi titik-titik
+            botMsg.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
             chatBox.appendChild(botMsg);
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                // Jembatan ke otak OpenAI
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -98,7 +117,7 @@
                 });
                 
                 const data = await response.json();
-                botMsg.innerText = data.reply; // Ganti animasi jadi jawaban asli
+                botMsg.innerText = data.reply; 
             } catch (error) {
                 botMsg.innerText = "koneksi terputus nih, coba chat lagi";
             }
